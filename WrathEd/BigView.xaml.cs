@@ -117,7 +117,7 @@ namespace WrathEd
                                     {
                                         bigUri = new Uri(source, bigUri);
                                     }
-                                    if (File.Exists(bigUri.LocalPath))
+//                                    if (File.Exists(bigUri.LocalPath))
                                     {
                                         bigFiles.Add(new SAGE.Big.File(bigUri.LocalPath));
                                     }
