@@ -15,6 +15,9 @@ namespace WrathEd
 
 	public partial class CompileWindow : Window
 	{
+		private bool? progressBarHasValue;
+		private int progressBarPercent = -1;
+
 		public CompileWindow()
 		{
 			uint achievementID = (uint)AchievementType.GETTING_STARTED;
@@ -159,6 +162,11 @@ namespace WrathEd
 
 		public bool SetBarToNoValue()
 		{
+			if (progressBarHasValue == false)
+			{
+				return true;
+			}
+			progressBarHasValue = false;
 			Dispatcher.Invoke((Action)(() =>
 			{
 				Progress.IsProgress = false;
@@ -168,6 +176,13 @@ namespace WrathEd
 
 		public bool SetBarToValue(double value)
 		{
+			int percent = (int)Math.Round(Math.Min(Math.Max(value, 0.0), 100.0));
+			if (progressBarHasValue == true && progressBarPercent == percent)
+			{
+				return true;
+			}
+			progressBarHasValue = true;
+			progressBarPercent = percent;
 			Dispatcher.Invoke((Action)(() =>
 			{
 				Progress.IsProgress = true;

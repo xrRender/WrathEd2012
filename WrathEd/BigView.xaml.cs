@@ -28,6 +28,8 @@ namespace WrathEd
         private Dictionary<string, string> versionFiles;
         private GameStream gameStream;
         private string singleManifest;
+        private bool? progressBarHasValue;
+        private int progressBarPercent = -1;
 
         public BigView()
         {
@@ -1320,6 +1322,11 @@ namespace WrathEd
 
         public void SetBarToNoValue()
         {
+            if (progressBarHasValue == false)
+            {
+                return;
+            }
+            progressBarHasValue = false;
             Dispatcher.Invoke((Action)(() =>
             {
                 Progress.IsProgress = false;
@@ -1328,6 +1335,13 @@ namespace WrathEd
 
         public void SetBarToValue(double value)
         {
+            int percent = (int)Math.Round(Math.Min(Math.Max(value, 0.0), 100.0));
+            if (progressBarHasValue == true && progressBarPercent == percent)
+            {
+                return;
+            }
+            progressBarHasValue = true;
+            progressBarPercent = percent;
             Dispatcher.Invoke((Action)(() =>
             {
                 Progress.IsProgress = true;
