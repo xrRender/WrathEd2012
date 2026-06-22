@@ -592,12 +592,35 @@ namespace SAGE.Compiler
                                 bitmap.Save("out.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
                                 bitmap.Save("out.png", System.Drawing.Imaging.ImageFormat.Png);
                             }*/
-                            FileStream fs = new FileStream("out.dds", FileMode.Create, FileAccess.Write);
-                            BinaryWriter writer = new BinaryWriter(fs);
-                            writer.Write(imageBuffer);
-                            writer.Flush();
-                            writer.Close();
-                            fs.Close();
+                            string fileName = "out";
+                            XmlNode assetNode = entryNode;
+                            while (assetNode != null)
+                            {
+                                if (assetNode.Attributes != null && assetNode.Attributes["id"] != null)
+                                {
+                                    fileName = assetNode.Attributes["id"].Value;
+                                    break;
+                                }
+                                assetNode = assetNode.ParentNode;
+                            }
+                            if (!string.IsNullOrEmpty(baseEntry.id) && baseEntry.id != "File")
+                            {
+                                fileName += "_" + baseEntry.id;
+                            }
+                            foreach (char invalidChar in Path.GetInvalidFileNameChars())
+                            {
+                                fileName = fileName.Replace(invalidChar, '_');
+                            }
+                            if (!fileName.EndsWith(".dds", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fileName += ".dds";
+                            }
+                            Directory.CreateDirectory("cache");
+                            using (FileStream fs = new FileStream(Path.Combine("cache", fileName), FileMode.Create, FileAccess.Write))
+                            using (BinaryWriter writer = new BinaryWriter(fs))
+                            {
+                                writer.Write(imageBuffer);
+                            }
                             break;
                     }
                 }
