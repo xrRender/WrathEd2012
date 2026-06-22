@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BigView.Big
+namespace Big
 {
 	public class PackedFile
 	{
